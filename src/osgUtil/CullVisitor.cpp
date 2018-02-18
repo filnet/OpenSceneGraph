@@ -1602,7 +1602,7 @@ void CullVisitor::apply(osg::Camera& camera)
             }
             else
             {
-                rtts->setDrawBuffer(camera.getDrawBuffer());
+                rtts->setDrawBuffer(camera.getDrawBuffer()); // XXX
             }
 
             if ( camera.getInheritanceMask() & READ_BUFFER )

@@ -520,8 +520,8 @@ void RenderStage::runCameraSetUp(osg::RenderInfo& renderInfo)
                 setDrawBuffer( GL_NONE, true );
                 setReadBuffer( GL_NONE, true );
                 #if !defined(OSG_GLES1_AVAILABLE) && !defined(OSG_GLES2_AVAILABLE) && !defined(OSG_GLES3_AVAILABLE)
-                    glDrawBuffer( GL_NONE );
-                    glReadBuffer( GL_NONE );
+                    //glDrawBuffer( GL_NONE ); // XXX
+                    //glReadBuffer( GL_NONE );
                 #endif
             }
 
@@ -909,10 +909,14 @@ void RenderStage::drawInner(osg::RenderInfo& renderInfo,RenderLeaf*& previous, b
 
     bool using_multiple_render_targets = fbo_supported && _fbo->hasMultipleRenderingTargets();
 
+    // everything seems to work fine without setting draw buffer again and again
+    // provided the color attachment hack in runCameraSetUp is disabled
+    // question: who sets the apply mask to true and why ?
     if (!using_multiple_render_targets)
     {
         #if !defined(OSG_GLES1_AVAILABLE) && !defined(OSG_GLES2_AVAILABLE) && !defined(OSG_GLES3_AVAILABLE)
 
+            OSG_WARN << "apply mask " << getDrawBufferApplyMask() << " " << _drawBuffer << std::endl;
             if( getDrawBufferApplyMask() )
                 glDrawBuffer(_drawBuffer);
 
